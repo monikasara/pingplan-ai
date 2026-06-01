@@ -24,6 +24,7 @@ function Sidebar({ mobileOpen = false, setMobileOpen = () => {} }) {
 
   const logout = async () => {
     await signOut(auth);
+    setMobileOpen(false);
     navigate("/");
   };
 

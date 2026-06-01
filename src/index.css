@@ -1879,3 +1879,146 @@ body[data-theme="dark"] .chat-message {
   height: 100%;
   object-fit: cover;
 }
+.mobile-menu-btn,
+.mobile-close {
+  display: none;
+}
+
+.sidebar-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.logout-btn {
+  margin-top: auto;
+  width: 100%;
+  padding: 12px;
+  border-radius: 12px;
+  background: #ffecec;
+  color: #b42318;
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  border: none;
+}
+
+.mobile-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.35);
+  z-index: 900;
+}
+
+.profile-card {
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  margin-bottom: 28px;
+}
+
+.profile-avatar-big {
+  width: 78px;
+  height: 78px;
+  min-width: 78px;
+  border-radius: 22px;
+  background: #f1f1ef;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32px;
+  font-weight: 800;
+  overflow: hidden;
+}
+
+.profile-avatar-big img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.login-success {
+  background: #e9ffe5;
+  color: #247a30 !important;
+  padding: 10px;
+  border-radius: 10px;
+  font-size: 13px;
+  margin: 10px 0;
+}
+
+@media (max-width: 768px) {
+  .mobile-menu-btn {
+    display: flex;
+    background: #f7f7f5;
+    border: 1px solid #e7e7e4;
+    border-radius: 12px;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .mobile-close {
+    display: flex;
+    background: transparent;
+    border: none;
+  }
+
+  .sidebar {
+    position: fixed !important;
+    left: -285px;
+    top: 0;
+    height: 100vh;
+    width: 270px;
+    z-index: 1000;
+    transition: left 0.25s ease;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar.mobile-show {
+    left: 0;
+  }
+
+  .main {
+    margin-left: 0 !important;
+    width: 100%;
+  }
+
+  .topbar {
+    gap: 8px;
+    padding: 10px;
+  }
+
+  .search-box {
+    max-width: 160px;
+  }
+
+  .share-btn span,
+  .new-btn span {
+    display: none;
+  }
+
+  .profile-card {
+    align-items: center;
+    gap: 14px;
+  }
+
+  .profile-avatar-big {
+    width: 64px;
+    height: 64px;
+    min-width: 64px;
+    border-radius: 18px;
+    font-size: 26px;
+  }
+
+  .page-title {
+    font-size: 32px !important;
+    line-height: 1.1;
+  }
+
+  .page-subtitle {
+    font-size: 15px !important;
+  }
+}

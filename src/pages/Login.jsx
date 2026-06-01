@@ -34,6 +34,8 @@ function Login() {
   }, [navigate]);
 
   const showError = (err) => {
+    console.error(err);
+
     if (err.code === "auth/invalid-credential") {
       setError("Wrong email or password, or account does not exist.");
     } else if (err.code === "auth/email-already-in-use") {
@@ -95,7 +97,9 @@ function Login() {
       await signInWithPopup(auth, provider);
       navigate("/dashboard");
     } catch (err) {
-      showError(err);
+      setError(
+        "Google login works best in browser. For Android app, use email/password login."
+      );
     } finally {
       setLoading(false);
     }
@@ -133,6 +137,7 @@ function Login() {
         {isSignup && (
           <>
             <label className="login-label">Username</label>
+
             <div className="login-input-wrap">
               <User size={18} />
               <input
@@ -145,6 +150,7 @@ function Login() {
         )}
 
         <label className="login-label">Email</label>
+
         <div className="login-input-wrap">
           <Mail size={18} />
           <input
@@ -155,6 +161,7 @@ function Login() {
         </div>
 
         <label className="login-label">Password</label>
+
         <div className="login-input-wrap">
           <Lock size={18} />
           <input

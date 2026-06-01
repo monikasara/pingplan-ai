@@ -1,6 +1,10 @@
 import { Menu, Search, Bell, Plus, Users, Download } from "lucide-react";
 
-function TopBar({ search = "", setSearch = () => {}, setMobileOpen = () => {} }) {
+function TopBar({
+  search = "",
+  setSearch = () => {},
+  setMobileOpen = () => {},
+}) {
   return (
     <div className="topbar">
       <button className="mobile-menu-btn" onClick={() => setMobileOpen(true)}>
@@ -11,7 +15,7 @@ function TopBar({ search = "", setSearch = () => {}, setMobileOpen = () => {} })
         <Search size={18} />
         <input
           type="text"
-          placeholder="Search..."
+          placeholder="Search"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
         />
@@ -33,6 +37,7 @@ function TopBar({ search = "", setSearch = () => {}, setMobileOpen = () => {} })
 
         <button className="new-btn">
           <Plus size={18} />
+          <span>New</span>
         </button>
       </div>
     </div>
