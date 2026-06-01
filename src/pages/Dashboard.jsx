@@ -8,6 +8,7 @@ import { getSyncedData, saveData } from "../utils/storage";
 function Dashboard() {
   const navigate = useNavigate();
 
+  const [mobileOpen, setMobileOpen] = useState(false);
   const [search, setSearch] = useState("");
   const [data, setData] = useState(null);
 
@@ -33,6 +34,7 @@ function Dashboard() {
   const currentUser = auth.currentUser;
   const user = data.user || {};
   const subjects = data.subjects || [];
+  const focusSessions = data.focusSessions || [];
 
   const totalTasks = subjects.reduce(
     (sum, subject) => sum + (subject.tasks?.length || 0),
@@ -44,8 +46,6 @@ function Dashboard() {
       sum + (subject.tasks || []).filter((task) => task.done).length,
     0
   );
-
-  const focusSessions = data.focusSessions || [];
 
   const totalFocusMinutes = focusSessions.reduce(
     (sum, session) => sum + Number(session.minutes || 0),
@@ -67,6 +67,7 @@ function Dashboard() {
 
   const handleCoverUpload = (e) => {
     const file = e.target.files[0];
+
     if (!file) return;
 
     const reader = new FileReader();
@@ -86,10 +87,14 @@ function Dashboard() {
 
   return (
     <div className="app">
-      <Sidebar />
+      <Sidebar mobileOpen={mobileOpen} setMobileOpen={setMobileOpen} />
 
       <main className="main">
-        <TopBar search={search} setSearch={setSearch} />
+        <TopBar
+          search={search}
+          setSearch={setSearch}
+          setMobileOpen={setMobileOpen}
+        />
 
         <div
           className="cover subject-cover"
@@ -119,8 +124,7 @@ function Dashboard() {
 
             <div>
               <h1 className="page-title">
-                Welcome, {currentUser?.displayName || user.name || "Student"}{" "}
-                👋
+                Welcome, {currentUser?.displayName || user.name || "Student"} 👋
               </h1>
 
               <p className="page-subtitle">
@@ -201,7 +205,7 @@ function Dashboard() {
                     backgroundSize: "cover",
                     backgroundPosition: "center",
                   }}
-                ></div>
+                />
 
                 <h3>
                   {subject.favorite ? "⭐ " : ""}

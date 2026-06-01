@@ -1,9 +1,6 @@
-import { useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { auth } from "../services/firebase";
-import { getData } from "../utils/storage";
-
 import {
   Home,
   BookOpen,
@@ -14,196 +11,75 @@ import {
   Brain,
   BarChart3,
   Settings,
-  ChevronDown,
-  Plus,
   LogOut,
-  UserPlus,
   MessageCircle,
   Map,
   Users,
   CalendarDays,
+  X,
 } from "lucide-react";
 
-function Sidebar() {
+function Sidebar({ mobileOpen = false, setMobileOpen = () => {} }) {
   const navigate = useNavigate();
-  const [workspaceOpen, setWorkspaceOpen] = useState(false);
 
-  const data = getData();
-  const user = data.user || {};
-
-  const handleLogout = async () => {
-    try {
-      await signOut(auth);
-      navigate("/");
-    } catch (error) {
-      console.error(error);
-      navigate("/");
-    }
+  const logout = async () => {
+    await signOut(auth);
+    navigate("/");
   };
 
   const links = [
-    {
-      name: "Home",
-      path: "/dashboard",
-      icon: <Home size={18} />,
-    },
-    {
-      name: "Courses",
-      path: "/subjects",
-      icon: <BookOpen size={18} />,
-    },
-    {
-      name: "AI Planner",
-      path: "/planner",
-      icon: <Sparkles size={18} />,
-    },
-    {
-      name: "Study Roadmap",
-      path: "/roadmap",
-      icon: <Map size={18} />,
-    },
-    {
-      name: "AI Doubt Solver",
-      path: "/doubt-solver",
-      icon: <MessageCircle size={18} />,
-    },
-    {
-      name: "Assignments",
-      path: "/tasks",
-      icon: <CheckSquare size={18} />,
-    },
-    {
-      name: "Focus Mode",
-      path: "/focus",
-      icon: <Timer size={18} />,
-    },
-    {
-      name: "Flashcards",
-      path: "/flashcards",
-      icon: <Layers size={18} />,
-    },
-    {
-      name: "Quiz Practice",
-      path: "/quiz",
-      icon: <Brain size={18} />,
-    },
-    {
-      name: "Study Room",
-      path: "/study-room",
-      icon: <Users size={18} />,
-    },
-    {
-      name: "Calendar",
-      path: "/calendar",
-      icon: <CalendarDays size={18} />,
-    },
-    {
-      name: "Progress",
-      path: "/progress",
-      icon: <BarChart3 size={18} />,
-    },
-    {
-      name: "Settings",
-      path: "/settings",
-      icon: <Settings size={18} />,
-    },
+    ["Home", "/dashboard", <Home size={18} />],
+    ["Courses", "/subjects", <BookOpen size={18} />],
+    ["AI Planner", "/planner", <Sparkles size={18} />],
+    ["Study Roadmap", "/roadmap", <Map size={18} />],
+    ["AI Doubt Solver", "/doubt-solver", <MessageCircle size={18} />],
+    ["Assignments", "/tasks", <CheckSquare size={18} />],
+    ["Focus Mode", "/focus", <Timer size={18} />],
+    ["Flashcards", "/flashcards", <Layers size={18} />],
+    ["Quiz Practice", "/quiz", <Brain size={18} />],
+    ["Study Room", "/study-room", <Users size={18} />],
+    ["Calendar", "/calendar", <CalendarDays size={18} />],
+    ["Progress", "/progress", <BarChart3 size={18} />],
+    ["Settings", "/settings", <Settings size={18} />],
   ];
 
   return (
-    <aside className="sidebar">
-      <div>
-        <button
-          className="workspace-btn"
-          onClick={() => setWorkspaceOpen(!workspaceOpen)}
-        >
-          <span>🌿 PingPlan Workspace</span>
-          <ChevronDown size={16} />
-        </button>
+    <>
+      {mobileOpen && (
+        <div className="mobile-backdrop" onClick={() => setMobileOpen(false)} />
+      )}
 
-        {workspaceOpen && (
-          <div className="workspace-menu">
-            <div className="workspace-profile">
-              <div className="avatar">
-                {user.avatar ? (
-                  <img
-                    src={user.avatar}
-                    alt="avatar"
-                    style={{
-                      width: "100%",
-                      height: "100%",
-                      borderRadius: "50%",
-                      objectFit: "cover",
-                    }}
-                  />
-                ) : (
-                  "M"
-                )}
-              </div>
+      <aside className={mobileOpen ? "sidebar mobile-show" : "sidebar"}>
+        <div className="sidebar-head">
+          <h2>🌿 PingPlan</h2>
 
-              <div>
-                <b>{user.name || "Monika"}</b>
-
-                <p>
-                  {data.sharedMembers?.length || 1} Study Members
-                </p>
-              </div>
-            </div>
-
-            <button onClick={() => navigate("/settings")}>
-              <Settings size={16} />
-              Workspace Settings
-            </button>
-
-            <button onClick={() => navigate("/study-room")}>
-              <UserPlus size={16} />
-              Invite Members
-            </button>
-
-            <button onClick={() => navigate("/subjects")}>
-              <Plus size={16} />
-              New Course
-            </button>
-
-            <hr />
-
-            <button onClick={handleLogout}>
-              <LogOut size={16} />
-              Logout
-            </button>
-          </div>
-        )}
+          <button className="mobile-close" onClick={() => setMobileOpen(false)}>
+            <X size={20} />
+          </button>
+        </div>
 
         <nav className="nav">
-          {links.map((link) => (
+          {links.map(([name, path, icon]) => (
             <NavLink
-              key={link.path}
-              to={link.path}
+              key={path}
+              to={path}
+              onClick={() => setMobileOpen(false)}
               className={({ isActive }) =>
-                isActive ? "active nav-item" : "nav-item"
+                isActive ? "nav-item active" : "nav-item"
               }
             >
-              {link.icon}
-              <span>{link.name}</span>
+              {icon}
+              <span>{name}</span>
             </NavLink>
           ))}
         </nav>
-      </div>
 
-      <div className="sidebar-bottom">
-        <div className="sidebar-note">
-          <b>🎯 Daily Goal</b>
-
-          <p>
-            {user.dailyGoal ||
-              "Finish 2 hours of focused study"}
-          </p>
-        </div>
-
-        <div className="sidebar-streak">
-          🔥 Streak: {user.streak || 1} days
-        </div>
-      </div>
-    </aside>
+        <button className="logout-btn" onClick={logout}>
+          <LogOut size={18} />
+          Logout
+        </button>
+      </aside>
+    </>
   );
 }
 
