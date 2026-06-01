@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+
 import {
   createUserWithEmailAndPassword,
   signInWithEmailAndPassword,
@@ -8,6 +9,7 @@ import {
   sendPasswordResetEmail,
   updateProfile,
 } from "firebase/auth";
+
 import { auth, provider } from "../services/firebase";
 import { Mail, Lock, User } from "lucide-react";
 
@@ -33,15 +35,13 @@ function Login() {
 
   const showError = (err) => {
     if (err.code === "auth/invalid-credential") {
-      setError("Wrong email or password, or this account does not exist.");
+      setError("Wrong email or password, or account does not exist.");
     } else if (err.code === "auth/email-already-in-use") {
-      setError("This email already has an account. Please login instead.");
+      setError("This email already has an account. Please login.");
     } else if (err.code === "auth/weak-password") {
-      setError("Password should be at least 6 characters.");
+      setError("Password must be at least 6 characters.");
     } else if (err.code === "auth/invalid-email") {
-      setError("Please enter a valid email address.");
-    } else if (err.code === "auth/too-many-requests") {
-      setError("Too many attempts. Please wait and try again.");
+      setError("Enter a valid email address.");
     } else {
       setError(err.message);
     }
@@ -52,12 +52,12 @@ function Login() {
     setSuccess("");
 
     if (!email || !password) {
-      setError("Please enter email and password.");
+      setError("Enter email and password.");
       return;
     }
 
     if (isSignup && !username.trim()) {
-      setError("Please enter a username.");
+      setError("Enter username.");
       return;
     }
 
@@ -74,14 +74,6 @@ function Login() {
         await updateProfile(result.user, {
           displayName: username,
         });
-
-        localStorage.setItem(
-          "pingplan_user",
-          JSON.stringify({
-            name: username,
-            email: result.user.email,
-          })
-        );
       } else {
         await signInWithEmailAndPassword(auth, email, password);
       }
@@ -100,18 +92,7 @@ function Login() {
 
     try {
       setLoading(true);
-
-      const result = await signInWithPopup(auth, provider);
-
-      localStorage.setItem(
-        "pingplan_user",
-        JSON.stringify({
-          name: result.user.displayName || "Student",
-          email: result.user.email,
-          photo: result.user.photoURL,
-        })
-      );
-
+      await signInWithPopup(auth, provider);
       navigate("/dashboard");
     } catch (err) {
       showError(err);
@@ -125,13 +106,13 @@ function Login() {
     setSuccess("");
 
     if (!email) {
-      setError("Enter your email first, then click forgot password.");
+      setError("Enter your email first.");
       return;
     }
 
     try {
       await sendPasswordResetEmail(auth, email);
-      setSuccess("Password reset email sent. Check Inbox or Spam folder.");
+      setSuccess("Password reset email sent. Check Inbox or Spam.");
     } catch (err) {
       showError(err);
     }
@@ -142,7 +123,7 @@ function Login() {
       <div className="login-card notion-login-card">
         <div className="login-avatar">🌿</div>
 
-        <h1>{isSignup ? "Create your account" : "Welcome back!"}</h1>
+        <h1>{isSignup ? "Create Account" : "Welcome back!"}</h1>
 
         <p>
           {isSignup ? "Start your" : "Sign in to open your"}{" "}
@@ -152,11 +133,10 @@ function Login() {
         {isSignup && (
           <>
             <label className="login-label">Username</label>
-
             <div className="login-input-wrap">
               <User size={18} />
               <input
-                placeholder="Choose a username..."
+                placeholder="Enter username..."
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
               />
@@ -165,18 +145,16 @@ function Login() {
         )}
 
         <label className="login-label">Email</label>
-
         <div className="login-input-wrap">
           <Mail size={18} />
           <input
-            placeholder="Enter your email..."
+            placeholder="Enter email..."
             value={email}
             onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
         <label className="login-label">Password</label>
-
         <div className="login-input-wrap">
           <Lock size={18} />
           <input

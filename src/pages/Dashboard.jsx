@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { auth } from "../services/firebase";
 import Sidebar from "../components/Sidebar";
 import TopBar from "../components/TopBar";
 import { getSyncedData, saveData } from "../utils/storage";
@@ -29,6 +30,7 @@ function Dashboard() {
     );
   }
 
+  const currentUser = auth.currentUser;
   const user = data.user || {};
   const subjects = data.subjects || [];
 
@@ -104,26 +106,28 @@ function Dashboard() {
         </div>
 
         <section className="page">
-          <div className="page-icon">
-            {user.avatar ? (
-              <img
-                src={user.avatar}
-                alt="avatar"
-                style={{
-                  width: "100%",
-                  height: "100%",
-                  objectFit: "cover",
-                  borderRadius: "16px",
-                }}
-              />
-            ) : (
-              "📅"
-            )}
-          </div>
+          <div className="profile-card">
+            <div className="profile-avatar-big">
+              {currentUser?.photoURL ? (
+                <img src={currentUser.photoURL} alt="profile" />
+              ) : (
+                currentUser?.displayName?.charAt(0)?.toUpperCase() ||
+                user.name?.charAt(0)?.toUpperCase() ||
+                "M"
+              )}
+            </div>
 
-          <h1 className="page-title">
-            Good to see you, {user.name || "Monika"} {user.mood || "😊"}
-          </h1>
+            <div>
+              <h1 className="page-title">
+                Welcome, {currentUser?.displayName || user.name || "Student"}{" "}
+                👋
+              </h1>
+
+              <p className="page-subtitle">
+                {currentUser?.email || "Your AI study workspace is ready."}
+              </p>
+            </div>
+          </div>
 
           <p className="page-subtitle">
             Your calm AI study workspace is ready. Plan, focus, revise, and grow
