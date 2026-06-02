@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # PingPlan - AI Study Planner
 
 PingPlan is a Notion-style AI study planner built for students to manage courses, notes, tasks, focus sessions, flashcards, quizzes, study roadmaps, and collaborative study rooms.
